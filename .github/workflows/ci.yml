@@ -26,6 +26,9 @@ jobs:
       - name: Generate Key
         run: php artisan key:generate
 
+      - name: Restart Container
+        run: docker-compose restart laravel.test
+
       - name: Run PHPUnit
         run: docker-compose exec -T laravel.test php artisan test
       
