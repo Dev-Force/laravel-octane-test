@@ -1,3 +1,20 @@
+FROM composer:2.4.3 as composer 
+
+# Copy composer files from project root into composer container's working dir
+COPY composer.* /app/
+ 
+# Run composer to build dependencies in vendor folder
+RUN set -xe \
+ && composer install --no-dev --no-scripts --no-suggest --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sockets
+ 
+# Copy everything from project root into composer container's working dir
+COPY . /app
+ 
+# Generated optimized autoload files containing all classes from vendor folder and project itself
+RUN composer dump-autoload --no-dev --optimize --classmap-authoritative
+
+
+
 FROM ubuntu:22.04
 
 LABEL maintainer="Taylor Otwell"
@@ -60,7 +77,8 @@ RUN chmod +x /usr/local/bin/start-container
 
 
 COPY . .
-RUN composer install
+COPY --from=composer /app/vendor .
+
 
 EXPOSE 8000
 
