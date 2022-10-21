@@ -11,13 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Checkout repository code
-      
-      - name: Start Laravel
-        run: docker-compose up -d
 
       # maybe its better to use a new .env.ci file or something similar.
       - name: Create .env
         run: cp .env.example .env
+      
+      - name: Start Laravel
+        run: docker-compose up -d
 
       - name: Run PHPUnit
         run: docker-compose exec laravel.test php artisan test
