@@ -20,6 +20,8 @@ services:
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
         volumes:
             - '.:/var/www/html'
+            - vendor-volume:/var/www/html/vendor
+            - vendor-volume-test:/var/www/html/vendor/laravel/sail/database/mysql/
         networks:
             - sail
         depends_on:
@@ -41,7 +43,7 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
             - 'sail-mysql:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            - vendor-volume-test:/docker-entrypoint-initdb.d/
         networks:
             - sail
         healthcheck:
@@ -96,4 +98,8 @@ volumes:
     sail-redis:
         driver: local
     sail-meilisearch:
+        driver: local
+    vendor-volume:
+        driver: local
+    vendor-volume-test:
         driver: local

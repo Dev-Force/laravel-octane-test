@@ -20,10 +20,8 @@ jobs:
       - name: Start Laravel
         run: docker-compose up -d
 
-      # - name: Composer Install
-      #   run: docker-compose exec -T laravel.test composer install
-      - name: Sleep
-        run: sleep 60
+      - name: Run Migrations
+        run: docker-compose exec -T laravel.test php artisan migrate
 
       - name: Run PHPUnit
         run: docker-compose exec -T laravel.test php artisan test
