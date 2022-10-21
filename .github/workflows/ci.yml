@@ -20,6 +20,9 @@ jobs:
       - name: Start Laravel
         run: docker-compose up -d
 
+      - name: Composer Install
+        run: docker-compose exec -T laravel.test composer install
+
       - name: Run PHPUnit
         run: docker-compose exec -T laravel.test php artisan test
       
