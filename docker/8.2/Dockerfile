@@ -1,6 +1,6 @@
 FROM composer:2.4.3 as composer 
 
-COPY composer.* .
+COPY composer.* ./
  
 RUN set -xe \
  && composer install --no-scripts --no-suggest --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sockets
