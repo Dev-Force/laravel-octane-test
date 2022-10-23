@@ -1,3 +1,5 @@
+#! /bin/bash
+
 # Name of the target container to check
 container_name="$1"
 # Timeout in seconds. Default: 60
@@ -13,7 +15,7 @@ echo "Timeout: $timeout sec";
 
 try=0;
 is_healthy="false";
-while [ $is_healthy != "healthy" ];
+while [ $is_healthy != "\"healthy\"" ];
 do
   try=$(($try + 1));
   printf "■";
