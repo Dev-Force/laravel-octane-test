@@ -1,0 +1,30 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-push:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout repository code
+
+      # maybe its better to use a new .env.ci file or something similar.
+      - name: Create .env
+        run: cp .env.example .env
+
+      - name: Start Laravel
+        run: docker-compose up -d
+
+      - name: Health Check
+        run: docker/healthcheck.sh sales-pgsql 30 && docker/healthcheck.sh sales-laravel 30
+
+      - name: Run PHPUnit
+        run: docker-compose exec -T laravel.test php artisan test
+
+      - name: Print Job Status
+        run: echo "Run Tests finished with status ${{ job.status }}."

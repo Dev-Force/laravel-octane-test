@@ -1,8 +1,16 @@
+FROM composer:2.4.3 as composer
+COPY composer.* ./
+RUN set -xe \
+    && composer install --no-scripts --no-suggest --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sockets
+COPY . .
+RUN composer dump-autoload --optimize --classmap-authoritative
+
+
 FROM ubuntu:22.04
 
 LABEL maintainer="Taylor Otwell"
 
-ARG WWWGROUP
+ARG WWWGROUP=1000
 ARG NODE_VERSION=16
 ARG POSTGRES_VERSION=14
 
@@ -53,10 +61,13 @@ RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.2
 RUN groupadd --force -g $WWWGROUP sail
 RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
 
-COPY start-container /usr/local/bin/start-container
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
+COPY docker/8.2/start-container /usr/local/bin/start-container
+COPY docker/8.2/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/8.2/php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
+
+COPY . .
+COPY --from=composer /app/vendor ./vendor
 
 EXPOSE 8000
 
