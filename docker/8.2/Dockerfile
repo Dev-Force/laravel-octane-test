@@ -1,14 +1,9 @@
 FROM composer:2.4.3 as composer
-
 COPY composer.* ./
-
 RUN set -xe \
- && composer install --no-scripts --no-suggest --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sockets
-
+    && composer install --no-scripts --no-suggest --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sockets
 COPY . .
-
 RUN composer dump-autoload --optimize --classmap-authoritative
-
 
 
 FROM ubuntu:22.04
@@ -74,6 +69,7 @@ RUN chmod +x /usr/local/bin/start-container
 COPY . .
 COPY --from=composer /app/vendor ./vendor
 
+RUN php artisan package:discover --ansi
 
 EXPOSE 8000
 
