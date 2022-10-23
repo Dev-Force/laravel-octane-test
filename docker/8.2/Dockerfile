@@ -1,12 +1,12 @@
-FROM composer:2.4.3 as composer 
+FROM composer:2.4.3 as composer
 
 COPY composer.* ./
- 
+
 RUN set -xe \
  && composer install --no-scripts --no-suggest --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sockets
- 
+
 COPY . .
- 
+
 RUN composer dump-autoload --optimize --classmap-authoritative
 
 
