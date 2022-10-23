@@ -69,8 +69,6 @@ RUN chmod +x /usr/local/bin/start-container
 COPY . .
 COPY --from=composer /app/vendor ./vendor
 
-RUN php artisan package:discover --ansi
-
 EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
