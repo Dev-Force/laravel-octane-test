@@ -20,8 +20,11 @@ jobs:
       - name: Start Laravel
         run: docker-compose up -d
 
+      - name: Health Check
+        run: docker/healthcheck.sh sales-pgsql 30 && docker/healthcheck.sh sales-laravel 30
+
       - name: Run PHPUnit
-        run: docker/healthcheck.sh sales-pgsql 30 && docker-compose exec -T laravel.test php artisan test
+        run: docker-compose exec -T laravel.test php artisan test
 
       - name: Print Job Status
         run: echo "Run Tests finished with status ${{ job.status }}."
