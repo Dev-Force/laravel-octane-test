@@ -16,19 +16,16 @@ jobs:
       # maybe its better to use a new .env.ci file or something similar.
       - name: Create .env
         run: cp .env.example .env
-      
+
       - name: Start Laravel
         run: docker-compose up -d
 
-        
+
       - name: Sleep
         run: sleep 15
 
-      - name: Run Migrations
-        run: docker-compose exec -T laravel.test php artisan migrate
-
       - name: Run PHPUnit
         run: docker-compose exec -T laravel.test php artisan test
-      
+
       - name: Print Job Status
         run: echo "Run Tests finished with status ${{ job.status }}."
