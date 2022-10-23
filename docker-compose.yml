@@ -26,6 +26,7 @@ services:
         depends_on:
             - pgsql
     pgsql:
+        container_name: sales-pgsql
         build:
             context: ./
             dockerfile: ./docker/postgis/Dockerfile
